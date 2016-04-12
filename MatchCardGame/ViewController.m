@@ -6,6 +6,7 @@
 //  Copyright © 2016 Kean Ho Chew. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "ViewController.h"
 #import "PokerCard.h"
 
@@ -15,46 +16,23 @@ static NSString *cardId[13] = { @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", 
 static NSString *cardShape[4] = { @"club", @"diamond", @"heart", @"spade" };
 static NSString *cardCover = @"card_cover";
 
-enum cardId {
-    CARD_2 = 0,
-    CARD_3,
-    CARD_4,
-    CARD_5,
-    CARD_6,
-    CARD_7,
-    CARD_8,
-    CARD_9,
-    CARD_10,
-    CARD_J,
-    CARD_Q,
-    CARD_K,
-    CARD_A
-};
-
-enum cardShape {
-    CLUB = 0,
-    DIAMOND,
-    HEART,
-    SPADE
-};
-
 @interface ViewController ()
 
 @property NSInteger row;
 @property NSInteger column;
 @property NSMutableArray *cardDeck;
+@property UIImageView *selectedCard;
+@property UIImage *cardCover;
 @property (weak, nonatomic) IBOutlet UIStackView *rowStackView;
 
 @end
 
 @implementation ViewController
-{
-    NSMutableArray *deck;
-}
 
 - (void)initialize
 {
     self.cardDeck = [[NSMutableArray alloc] init];
+    self.cardCover = [UIImage imageNamed:cardCover];
 }
 
 - (void)viewDidLoad
@@ -72,7 +50,7 @@ enum cardShape {
     NSInteger totalCards, totalDraws;
     NSMutableString *cardName;
     PokerCard *card;
-
+    
     // hard code to 4x4
     self.row = 4;
     self.column = 4;
@@ -121,15 +99,14 @@ enum cardShape {
         verticalStackView.axis = UILayoutConstraintAxisHorizontal;
         verticalStackView.distribution = UIStackViewDistributionFillEqually;
         verticalStackView.alignment = UIStackViewAlignmentCenter;
+        verticalStackView.spacing = 5;
         
         
         for (j=0; j<self.column; j++) {
-            UIImage *image = [UIImage imageNamed:cardCover];
-            
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:self.cardCover];
             imageView.contentMode = UIViewContentModeScaleAspectFit;
             card = self.cardDeck[k];
-            imageView.accessibilityIdentifier = card.name;
+            imageView.tag = 2000 + k;
             [verticalStackView addArrangedSubview:imageView];
             k++;
             
@@ -157,8 +134,66 @@ enum cardShape {
 {
     UITapGestureRecognizer *gesture = sender;
     UIImageView *imageView = (UIImageView *) gesture.view;
+    PokerCard *card = self.cardDeck[imageView.tag - 2000];
     
-    NSLog(@"ImageName = %@", imageView.accessibilityIdentifier);
+    if (card.opened)
+        return;
+    
+    
+    if (self.selectedCard == nil) {
+        [self openCard:imageView card:card];
+        self.selectedCard = imageView;
+        return;
+    }
+    
+    PokerCard *selectedCard = self.cardDeck[self.selectedCard.tag - 2000];
+    [self openCard:imageView card:card];
+    if (![card.name isEqualToString:selectedCard.name]) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self closeCard:self.selectedCard];
+            [self closeCard:imageView];
+            self.selectedCard = nil;
+        });
+        return;
+    }
+
+    [self openCard:imageView card:card];
+    selectedCard.opened = YES;
+    card.opened = YES;
+    self.selectedCard = nil;
+
+    // Increase Counter
+
+    
+    // Check for end game
+        // if all card is opened
+        // prompt alert
+    NSLog(@"Card Opened: %@", card.name);
+    
+}
+
+- (void)openCard:(UIImageView *)imageView card:(PokerCard *)card
+{
+    UIImage *image = [UIImage imageNamed:card.name];
+    
+    [UIView transitionWithView:imageView duration:0.4
+                       options:UIViewAnimationOptionTransitionFlipFromRight
+                    animations:^(void) {
+                        imageView.image = image;
+                    }
+                    completion:nil
+     ];
+}
+
+- (void)closeCard:(UIImageView *)imageView
+{
+    [UIView transitionWithView:imageView duration:0.8
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^(void) {
+                        imageView.image = self.cardCover;
+                    }
+                    completion:nil
+     ];
 }
 
 - (void)didReceiveMemoryWarning

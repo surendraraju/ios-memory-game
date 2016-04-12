@@ -14,6 +14,7 @@
 		03AAA5151CBB7B82004E2E80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03AAA5141CBB7B82004E2E80 /* Assets.xcassets */; };
 		03AAA5181CBB7B82004E2E80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03AAA5161CBB7B82004E2E80 /* LaunchScreen.storyboard */; };
 		03AAA5211CBB8521004E2E80 /* PokerCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 03AAA5201CBB8521004E2E80 /* PokerCard.m */; };
+		03AAA5231CBC804B004E2E80 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03AAA5221CBC804B004E2E80 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		03AAA5191CBB7B82004E2E80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		03AAA51F1CBB8521004E2E80 /* PokerCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PokerCard.h; sourceTree = "<group>"; };
 		03AAA5201CBB8521004E2E80 /* PokerCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PokerCard.m; sourceTree = "<group>"; };
+		03AAA5221CBC804B004E2E80 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03AAA5231CBC804B004E2E80 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +48,7 @@
 		03AAA4FC1CBB7B82004E2E80 = {
 			isa = PBXGroup;
 			children = (
+				03AAA5221CBC804B004E2E80 /* QuartzCore.framework */,
 				03AAA5071CBB7B82004E2E80 /* MatchCardGame */,
 				03AAA5061CBB7B82004E2E80 /* Products */,
 			);
