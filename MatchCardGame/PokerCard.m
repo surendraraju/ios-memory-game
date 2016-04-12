@@ -10,4 +10,11 @@
 
 @implementation PokerCard
 
+- (PokerCard *)initWithString:(NSString *)name
+{
+    self.name = name;
+    self.opened = NO;
+    return self;
+}
+
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "PokerCard.h"
 
 static int TOTAL_CARDS_NUMBER_TYPES = 13;
 static int TOTAL_CARDS_SHAPE_TYPES = 4;
@@ -70,6 +71,7 @@ enum cardShape {
     BOOL still_drawing = true;
     NSInteger totalCards, totalDraws;
     NSMutableString *cardName;
+    PokerCard *card;
 
     // hard code to 4x4
     self.row = 4;
@@ -88,14 +90,19 @@ enum cardShape {
                     cardShape[arc4random_uniform(TOTAL_CARDS_SHAPE_TYPES)],
                     cardId[arc4random_uniform(TOTAL_CARDS_NUMBER_TYPES)]];
         
-        if (![self.cardDeck containsObject:cardName])
-            [self.cardDeck addObject:cardName];
+        if (![self.cardDeck containsObject:cardName]) {
+            card = [[PokerCard alloc] init];
+            card.name = cardName;
+            card.opened = NO;
+            [self.cardDeck addObject:card];
+        }
         
     }
     
     // extract card and insert to array
     for(i=0; i < totalDraws; i++) {
-        NSMutableString *duplicates = [[NSMutableString alloc] initWithString:self.cardDeck[i]];
+        card = self.cardDeck[i];
+        PokerCard *duplicates = [[PokerCard alloc] initWithString:card.name];
         [self.cardDeck addObject:duplicates];
     }
     
@@ -117,11 +124,12 @@ enum cardShape {
         
         
         for (j=0; j<self.column; j++) {
-            UIImage *image = [UIImage imageNamed:self.cardDeck[k]];
+            UIImage *image = [UIImage imageNamed:cardCover];
             
             UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
             imageView.contentMode = UIViewContentModeScaleAspectFit;
-            imageView.accessibilityIdentifier = self.cardDeck[k];
+            card = self.cardDeck[k];
+            imageView.accessibilityIdentifier = card.name;
             [verticalStackView addArrangedSubview:imageView];
             k++;
             
@@ -151,7 +159,6 @@ enum cardShape {
     UIImageView *imageView = (UIImageView *) gesture.view;
     
     NSLog(@"ImageName = %@", imageView.accessibilityIdentifier);
-    NSLog(@"Activated!");
 }
 
 - (void)didReceiveMemoryWarning

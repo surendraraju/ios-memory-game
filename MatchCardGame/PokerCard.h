@@ -10,7 +10,9 @@
 
 @interface PokerCard : NSObject
 
-@property NSString *number;
-@property NSString *type;
+@property NSString *name;
+@property BOOL opened;
+
+- (PokerCard *)initWithString:(NSString *)name;
 
 @end
