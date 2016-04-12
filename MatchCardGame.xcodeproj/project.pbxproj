@@ -13,6 +13,7 @@
 		03AAA5131CBB7B82004E2E80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03AAA5111CBB7B82004E2E80 /* Main.storyboard */; };
 		03AAA5151CBB7B82004E2E80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03AAA5141CBB7B82004E2E80 /* Assets.xcassets */; };
 		03AAA5181CBB7B82004E2E80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03AAA5161CBB7B82004E2E80 /* LaunchScreen.storyboard */; };
+		03AAA5211CBB8521004E2E80 /* PokerCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 03AAA5201CBB8521004E2E80 /* PokerCard.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		03AAA5141CBB7B82004E2E80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		03AAA5171CBB7B82004E2E80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		03AAA5191CBB7B82004E2E80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		03AAA51F1CBB8521004E2E80 /* PokerCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PokerCard.h; sourceTree = "<group>"; };
+		03AAA5201CBB8521004E2E80 /* PokerCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PokerCard.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +70,8 @@
 				03AAA5161CBB7B82004E2E80 /* LaunchScreen.storyboard */,
 				03AAA5191CBB7B82004E2E80 /* Info.plist */,
 				03AAA5081CBB7B82004E2E80 /* Supporting Files */,
+				03AAA51F1CBB8521004E2E80 /* PokerCard.h */,
+				03AAA5201CBB8521004E2E80 /* PokerCard.m */,
 			);
 			path = MatchCardGame;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03AAA5101CBB7B82004E2E80 /* ViewController.m in Sources */,
+				03AAA5211CBB8521004E2E80 /* PokerCard.m in Sources */,
 				03AAA50D1CBB7B82004E2E80 /* AppDelegate.m in Sources */,
 				03AAA50A1CBB7B82004E2E80 /* main.m in Sources */,
 			);
@@ -301,6 +307,7 @@
 				03AAA51E1CBB7B82004E2E80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
