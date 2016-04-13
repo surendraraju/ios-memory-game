@@ -37,7 +37,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="leftBarItem" destination="Qpm-hp-G0S" id="9k7-7w-ggK"/>
+                        <outlet property="leftBarItem" destination="Qpm-hp-G0S" id="RQv-Sk-j6g"/>
                         <outlet property="navigationBar" destination="cOi-XI-MbI" id="kg8-gh-cxc"/>
                         <outlet property="rightBarItem" destination="3eb-ww-ddG" id="lmg-Yq-rCR"/>
                         <outlet property="rowStackView" destination="bDE-NT-gtD" id="9Py-be-0yO"/>

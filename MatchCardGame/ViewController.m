@@ -27,6 +27,9 @@ static NSString *cardCover = @"card_cover";
 @property (weak, nonatomic) IBOutlet UINavigationItem *navigationBar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rightBarItem;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *leftBarItem;
+@property NSTimer *timer;
+@property NSInteger timerMinute;
+@property NSInteger timerSecond;
 @property NSInteger solvedCounter;
 
 @end
@@ -43,7 +46,6 @@ static NSString *cardCover = @"card_cover";
     self.leftBarItem.enabled = NO;
     [self.leftBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor]}
                                      forState:UIControlStateNormal];
-    [self resetStatusBar];
 }
 
 - (void)viewDidLoad
@@ -137,11 +139,19 @@ static NSString *cardCover = @"card_cover";
 - (void)resetStatusBar
 {
     self.solvedCounter = 0;
-    self.navigationBar.title = [[NSString alloc] initWithFormat:@"Solved %d", (int)self.solvedCounter];
+    self.navigationBar.title = [[NSString alloc] initWithFormat:@"Solved: %d", (int)self.solvedCounter];
     [self.cardDeck removeAllObjects];
     for (UIView *subView in self.rowStackView.arrangedSubviews) {
         [subView removeFromSuperview];
     }
+    self.timerMinute = 0;
+    self.timerSecond = 0;
+    self.leftBarItem.title = @"00:00";
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                  target:self
+                                                selector:@selector(timerTick:)
+                                                userInfo:nil
+                                                 repeats:YES];
 }
 
 - (void)shuffleDeck
@@ -195,8 +205,12 @@ static NSString *cardCover = @"card_cover";
     // Check for end game
         // if all card is opened
     if (self.solvedCounter >= self.cardDeck.count / 2) {
+        [self.timer invalidate];
+        self.timer = nil;
+        NSString *message = [[NSString alloc] initWithFormat:@"You've solved it in %02d:%02d!", (int)self.timerMinute,
+                             (int)self.timerSecond];
         UIAlertController *endGameAlert = [UIAlertController alertControllerWithTitle:@"Congrats!"
-                                                                              message:@"You've solved!"
+                                                                              message:message
                                                                        preferredStyle:UIAlertControllerStyleAlert];
         [endGameAlert addAction:[UIAlertAction actionWithTitle:@"Restart"
                                                          style:UIAlertActionStyleDefault
@@ -206,6 +220,17 @@ static NSString *cardCover = @"card_cover";
          ];
         [self presentViewController:endGameAlert animated:YES completion:nil];
     }
+}
+
+- (IBAction)timerTick:(id)sender
+{
+    if (self.timerSecond + 1 != 60) {
+        self.timerSecond += 1;
+    } else {
+        self.timerMinute += 1;
+        self.timerSecond = 0;
+    }
+    [self.leftBarItem setTitle:[NSString stringWithFormat:@"%02d:%02d", (int)self.timerMinute, (int)self.timerSecond]];
 }
 
 - (void)openCard:(UIImageView *)imageView card:(PokerCard *)card
