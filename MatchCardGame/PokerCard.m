@@ -14,6 +14,7 @@
 {
     self.name = name;
     self.opened = NO;
+    self.guessed = NO;
     return self;
 }
 

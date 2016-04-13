@@ -12,6 +12,7 @@
 
 @property NSString *name;
 @property BOOL opened;
+@property BOOL guessed;
 
 - (PokerCard *)initWithString:(NSString *)name;
 

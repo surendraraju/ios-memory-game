@@ -24,6 +24,10 @@ static NSString *cardCover = @"card_cover";
 @property UIImageView *selectedCard;
 @property UIImage *cardCover;
 @property (weak, nonatomic) IBOutlet UIStackView *rowStackView;
+@property (weak, nonatomic) IBOutlet UINavigationItem *navigationBar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *rightBarItem;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *leftBarItem;
+@property NSInteger solvedCounter;
 
 @end
 
@@ -33,6 +37,13 @@ static NSString *cardCover = @"card_cover";
 {
     self.cardDeck = [[NSMutableArray alloc] init];
     self.cardCover = [UIImage imageNamed:cardCover];
+    self.rightBarItem.enabled = NO;
+    [self.rightBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor]}
+                                     forState:UIControlStateNormal];
+    self.leftBarItem.enabled = NO;
+    [self.leftBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor]}
+                                     forState:UIControlStateNormal];
+    [self resetStatusBar];
 }
 
 - (void)viewDidLoad
@@ -54,6 +65,9 @@ static NSString *cardCover = @"card_cover";
     // hard code to 4x4
     self.row = 4;
     self.column = 4;
+    
+    // reset everything to 0
+    [self resetStatusBar];
     
     // calculate total draw card
     totalCards = self.row * self.column;
@@ -120,6 +134,16 @@ static NSString *cardCover = @"card_cover";
     }
 }
 
+- (void)resetStatusBar
+{
+    self.solvedCounter = 0;
+    self.navigationBar.title = [[NSString alloc] initWithFormat:@"Solved %d", (int)self.solvedCounter];
+    [self.cardDeck removeAllObjects];
+    for (UIView *subView in self.rowStackView.arrangedSubviews) {
+        [subView removeFromSuperview];
+    }
+}
+
 - (void)shuffleDeck
 {
     int i, j;
@@ -136,13 +160,13 @@ static NSString *cardCover = @"card_cover";
     UIImageView *imageView = (UIImageView *) gesture.view;
     PokerCard *card = self.cardDeck[imageView.tag - 2000];
     
-    if (card.opened)
+    if (card.opened || card.guessed)
         return;
-    
     
     if (self.selectedCard == nil) {
         [self openCard:imageView card:card];
         self.selectedCard = imageView;
+        card.guessed = YES;
         return;
     }
     
@@ -153,6 +177,7 @@ static NSString *cardCover = @"card_cover";
             [self closeCard:self.selectedCard];
             [self closeCard:imageView];
             self.selectedCard = nil;
+            selectedCard.guessed = NO;
         });
         return;
     }
@@ -163,13 +188,24 @@ static NSString *cardCover = @"card_cover";
     self.selectedCard = nil;
 
     // Increase Counter
+    self.solvedCounter += 1;
+    self.navigationBar.title = [NSString stringWithFormat:@"Solved: %d", (int) self.solvedCounter];
 
     
     // Check for end game
         // if all card is opened
-        // prompt alert
-    NSLog(@"Card Opened: %@", card.name);
-    
+    if (self.solvedCounter >= self.cardDeck.count / 2) {
+        UIAlertController *endGameAlert = [UIAlertController alertControllerWithTitle:@"Congrats!"
+                                                                              message:@"You've solved!"
+                                                                       preferredStyle:UIAlertControllerStyleAlert];
+        [endGameAlert addAction:[UIAlertAction actionWithTitle:@"Restart"
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *handler){
+                                                           [self setupNewGame];
+                                                       }]
+         ];
+        [self presentViewController:endGameAlert animated:YES completion:nil];
+    }
 }
 
 - (void)openCard:(UIImageView *)imageView card:(PokerCard *)card
