@@ -15,6 +15,7 @@ static int TOTAL_CARDS_SHAPE_TYPES = 4;
 static NSString *cardId[13] = { @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"J", @"Q", @"K", @"A" };
 static NSString *cardShape[4] = { @"club", @"diamond", @"heart", @"spade" };
 static NSString *cardCover = @"card_cover";
+static NSString *highScoreString = @"highScore";
 
 @interface ViewController ()
 
@@ -28,8 +29,7 @@ static NSString *cardCover = @"card_cover";
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *rightBarItem;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *leftBarItem;
 @property NSTimer *timer;
-@property NSInteger timerMinute;
-@property NSInteger timerSecond;
+@property NSInteger timerTick;
 @property NSInteger solvedCounter;
 
 @end
@@ -144,14 +144,17 @@ static NSString *cardCover = @"card_cover";
     for (UIView *subView in self.rowStackView.arrangedSubviews) {
         [subView removeFromSuperview];
     }
-    self.timerMinute = 0;
-    self.timerSecond = 0;
+    self.timerTick = 0;
     self.leftBarItem.title = @"00:00";
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                   target:self
                                                 selector:@selector(timerTick:)
                                                 userInfo:nil
                                                  repeats:YES];
+    
+    NSUserDefaults *info = [NSUserDefaults standardUserDefaults];
+    NSInteger highScore = [info integerForKey:highScoreString];
+    [self.rightBarItem setTitle:[NSString stringWithFormat:@"Top Score: %02d:%02d", (int)highScore / 60, (int)highScore % 60]];
 }
 
 - (void)shuffleDeck
@@ -207,8 +210,17 @@ static NSString *cardCover = @"card_cover";
     if (self.solvedCounter >= self.cardDeck.count / 2) {
         [self.timer invalidate];
         self.timer = nil;
-        NSString *message = [[NSString alloc] initWithFormat:@"You've solved it in %02d:%02d!", (int)self.timerMinute,
-                             (int)self.timerSecond];
+        
+        NSUserDefaults *info = [NSUserDefaults standardUserDefaults];
+        NSInteger highScore = [info integerForKey:highScoreString];
+        
+        if (self.timerTick < highScore || highScore <= 0) {
+            [info setInteger:self.timerTick forKey:highScoreString];
+        }
+        
+        
+        NSString *message = [[NSString alloc] initWithFormat:@"You've solved it in %02d:%02d!", (int)self.timerTick / 60,
+                             (int)self.timerTick % 60];
         UIAlertController *endGameAlert = [UIAlertController alertControllerWithTitle:@"Congrats!"
                                                                               message:message
                                                                        preferredStyle:UIAlertControllerStyleAlert];
@@ -224,13 +236,8 @@ static NSString *cardCover = @"card_cover";
 
 - (IBAction)timerTick:(id)sender
 {
-    if (self.timerSecond + 1 != 60) {
-        self.timerSecond += 1;
-    } else {
-        self.timerMinute += 1;
-        self.timerSecond = 0;
-    }
-    [self.leftBarItem setTitle:[NSString stringWithFormat:@"%02d:%02d", (int)self.timerMinute, (int)self.timerSecond]];
+    self.timerTick += 1;
+    [self.leftBarItem setTitle:[NSString stringWithFormat:@"%02d:%02d", (int)self.timerTick / 60, (int)self.timerTick % 60]];
 }
 
 - (void)openCard:(UIImageView *)imageView card:(PokerCard *)card
